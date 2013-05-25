@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Simple GPS tracker</string>
+    <string name="start_label">Start</string>
+    <string name="stop_label">Stop</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="enable_gps">Enable GPS</string>
+    <string name="enable_gps_dialog">GPS provider not enabled. Would you like to enable it?</string>
+    <string name="not_support_gps">GPS provider not supported</string>
+    <string name="address">Address:</string>
+    <string name="time_elapsed">Time elapsed ( seconds ):</string>
+    <string name="label_total_dist">Total distance ( kilometers ):</string>
+    <string name="label_avg_speed">Average speed ( km/h ):</string>
+    <string name="label_cur_speed">Current speed ( km/h ):</string>
+    <string name="label_no_address">Unable to determine your address</string>
+    <string name="notification_text">Tap here to open Simple Sport Tracker</string>
+    <string name="notification_title">Simple Sport Tracker</string>
+
+</resources>
