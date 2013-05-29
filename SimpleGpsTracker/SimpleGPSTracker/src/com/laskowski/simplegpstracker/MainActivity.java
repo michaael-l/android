@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity {
 
 	public static final String TAG = "com.laskowski.simplegpstracker.FragmentActivity";
 
-	private static final long UI_UPDATE_INTERVAL = 1000;
+	private static final long UI_UPDATE_INTERVAL = 100;
 
 	// UI handler codes.
 	private static final int UPDATE_TIME = 1;
@@ -67,7 +67,6 @@ public class MainActivity extends FragmentActivity {
 	private TextView mTimeElapsed;
 
 	private Handler mTimeHandler = new Handler();
-	private Handler mUIHandler = new Handler();
 
 	private TextView mTotalDistance;
 
@@ -93,32 +92,23 @@ public class MainActivity extends FragmentActivity {
 				mTimeElapsed.setText("" + minutes + ":" + seconds);
 			}
 
-			mTimeHandler.postDelayed(this, 100);
-		}
-	};
-
-	/**
-	 * task for updating the traveled distance in UI. Calls the background
-	 * service
-	 */
-	private Runnable mUpdateUITask = new Runnable() {
-		public void run() {
-
-			if (mIsBound) {
-				SpeedDistanceTuple tuple = mBoundService.getUIData();
-				if (tuple != null) {
-					Message.obtain(mHandler, UPDATE_TOTAL_DIST,
-							tuple.getDistance()).sendToTarget();
-					Message.obtain(mHandler, UPDATE_CUR_SPEED, tuple.getSpeed())
-							.sendToTarget();
+			// rest of UI fields - update only each second time
+			if (millis % 2 == 0) {
+				if (mIsBound) {
+					SpeedDistanceTuple tuple = mBoundService.getUIData();
+					if (tuple != null) {
+						Message.obtain(mHandler, UPDATE_TOTAL_DIST,
+								tuple.getDistance()).sendToTarget();
+						Message.obtain(mHandler, UPDATE_CUR_SPEED,
+								tuple.getSpeed()).sendToTarget();
+					}
+				} else {
+					Log.w(TAG,
+							"service was not bound, unable to update travelled distance");
 				}
-			} else {
-				Log.w(TAG,
-						"service was not bound, unable to update travelled distance");
 			}
 
-			mUIHandler.postDelayed(this, UI_UPDATE_INTERVAL);
-
+			mTimeHandler.postDelayed(this, UI_UPDATE_INTERVAL);
 		}
 	};
 
@@ -259,7 +249,6 @@ public class MainActivity extends FragmentActivity {
 		if (!mIsStart) {
 
 			mTimeHandler.removeCallbacks(mUpdateTimeTask);
-			mUIHandler.removeCallbacks(mUpdateUITask);
 
 			mStartStopButton.setText(R.string.start_label);
 			setUpMapIfNeeded();
@@ -279,16 +268,12 @@ public class MainActivity extends FragmentActivity {
 			if (mStartTime == 0L) {
 				mStartTime = System.currentTimeMillis();
 				mTimeHandler.removeCallbacks(mUpdateTimeTask);
-				mTimeHandler.postDelayed(mUpdateTimeTask, 100);
+				mTimeHandler.postDelayed(mUpdateTimeTask, UI_UPDATE_INTERVAL);
 			}
 
-			mUIHandler.removeCallbacks(mUpdateUITask);
-			mUIHandler.postDelayed(mUpdateUITask, UI_UPDATE_INTERVAL);
-
-			// setUp();
 			mStartStopButton.setText(R.string.stop_label);
-			startService(new Intent(this, GpsTrackService.class));
 			doBindService();
+			startService(new Intent(this, GpsTrackService.class));
 		}
 		mIsStart = !mIsStart;
 	}
