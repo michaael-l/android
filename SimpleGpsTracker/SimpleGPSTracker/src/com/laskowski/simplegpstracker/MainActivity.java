@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity {
 
 			// rest of UI fields - update only each second time
 			if (millis % 2 == 0) {
-				if (mIsBound) {
+				if (mIsBound && mBoundService != null) {
 					SpeedDistanceTuple tuple = mBoundService.getUIData();
 					if (tuple != null) {
 						Message.obtain(mHandler, UPDATE_TOTAL_DIST,
@@ -265,15 +265,16 @@ public class MainActivity extends FragmentActivity {
 
 			cleanAppState();
 
+			mStartStopButton.setText(R.string.stop_label);
+			doBindService();
+			startService(new Intent(this, GpsTrackService.class));
+
 			if (mStartTime == 0L) {
 				mStartTime = System.currentTimeMillis();
 				mTimeHandler.removeCallbacks(mUpdateTimeTask);
 				mTimeHandler.postDelayed(mUpdateTimeTask, UI_UPDATE_INTERVAL);
 			}
 
-			mStartStopButton.setText(R.string.stop_label);
-			doBindService();
-			startService(new Intent(this, GpsTrackService.class));
 		}
 		mIsStart = !mIsStart;
 	}
