@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,15 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.laskowski.simplegpstracker.fragments.EnableGpsDialogFragment;
 import com.laskowski.simplegpstracker.service.GpsTrackService;
-import com.laskowski.simplegpstracker.util.PolyLineLatLngBoundsTuple;
+import com.laskowski.simplegpstracker.task.CreatePolylineTask;
 import com.laskowski.simplegpstracker.util.SpeedDistanceTuple;
 
 public class MainActivity extends FragmentActivity {
@@ -225,16 +220,16 @@ public class MainActivity extends FragmentActivity {
 				mMap = ((SupportMapFragment) getSupportFragmentManager()
 						.findFragmentById(R.id.map)).getMap();
 				if (mMap != null && locations.size() > 1) {
-					new CreatePolylineTask().execute(new Void[] {});
+					new CreatePolylineTask(this).execute(new Void[] {});
 				}
 			} else if (locations.size() > 1) {
-				new CreatePolylineTask().execute(new Void[] {});
+				new CreatePolylineTask(this).execute(new Void[] {});
 			}
 		}
 
 	}
 
-	private void showHideMap(boolean visible) {
+	public void showHideMap(boolean visible) {
 
 		if (visible) {
 			mFragmentLayout.setVisibility(View.VISIBLE);
@@ -303,48 +298,6 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	private class CreatePolylineTask extends
-			AsyncTask<Void, Void, PolyLineLatLngBoundsTuple> {
-
-		public CreatePolylineTask() {
-			super();
-		}
-
-		@Override
-		protected PolyLineLatLngBoundsTuple doInBackground(Void... params) {
-			if (mIsBound) {
-
-				PolyLineLatLngBoundsTuple result = new PolyLineLatLngBoundsTuple();
-				PolylineOptions polyline = new PolylineOptions();
-				LatLngBounds.Builder builder = new LatLngBounds.Builder();
-				LatLng ll = null;
-				List<Location> locations = mBoundService.getLocations();
-				for (Location loc : locations) {
-					ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-					polyline.add(ll);
-					builder = builder.include(ll);
-
-				}
-				result.setBounds(builder.build());
-				result.setOptions(polyline);
-				return result;
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(PolyLineLatLngBoundsTuple result) {
-
-			if (result != null && result.getOptions().getPoints().size() != 0) {
-				showHideMap(true);
-				mMap.addPolyline(result.getOptions());
-				mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(
-						result.getBounds(), mFragmentLayout.getWidth(),
-						mFragmentLayout.getHeight(), 20));
-			}
-		}
-	}
-
 	private ServiceConnection mConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder service) {
 			mBoundService = ((GpsTrackService.LocalBinder) service)
@@ -358,5 +311,37 @@ public class MainActivity extends FragmentActivity {
 					Toast.LENGTH_SHORT).show();
 		}
 	};
+
+	public boolean ismIsBound() {
+		return mIsBound;
+	}
+
+	public void setmIsBound(boolean mIsBound) {
+		this.mIsBound = mIsBound;
+	}
+
+	public GpsTrackService getmBoundService() {
+		return mBoundService;
+	}
+
+	public void setmBoundService(GpsTrackService mBoundService) {
+		this.mBoundService = mBoundService;
+	}
+
+	public GoogleMap getmMap() {
+		return mMap;
+	}
+
+	public void setmMap(GoogleMap mMap) {
+		this.mMap = mMap;
+	}
+
+	public LinearLayout getmFragmentLayout() {
+		return mFragmentLayout;
+	}
+
+	public void setmFragmentLayout(LinearLayout mFragmentLayout) {
+		this.mFragmentLayout = mFragmentLayout;
+	}
 
 }
