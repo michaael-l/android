@@ -1,5 +1,6 @@
 package com.laskowski.simplegpstracker;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -15,6 +16,8 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.laskowski.simplegpstracker.db.DBUtils;
 import com.laskowski.simplegpstracker.fragments.EnableGpsDialogFragment;
 import com.laskowski.simplegpstracker.service.GpsTrackService;
 import com.laskowski.simplegpstracker.task.CreatePolylineTask;
@@ -66,6 +70,8 @@ public class MainActivity extends FragmentActivity {
 	private TextView mTotalDistance;
 
 	private Integer mTotalDistanceInMeters = 0;
+
+	private static final int HISTORY_ID = Menu.FIRST;
 
 	/**
 	 * task for updating the elapsed time on UI
@@ -212,6 +218,24 @@ public class MainActivity extends FragmentActivity {
 		super.onStop();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		menu.add(Menu.NONE, HISTORY_ID, Menu.NONE, R.string.menu_history);
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case HISTORY_ID:
+			Intent i = new Intent(this, TripListActivity.class);
+			startActivityForResult(i, HISTORY_ID);
+			return true;
+		}
+		return super.onMenuItemSelected(featureId, item);
+	}
+
 	private void setUpMapIfNeeded() {
 		if (mIsBound) {
 			List<Location> locations = mBoundService.getLocations();
@@ -252,6 +276,13 @@ public class MainActivity extends FragmentActivity {
 				Message.obtain(mHandler, UPDATE_AVG_SPEED,
 						mBoundService.getAverageSpeed(mTotalTime))
 						.sendToTarget();
+				DBUtils db = DBUtils.getInstance(this);
+				db.createTripEntry("Trip from "
+						+ Calendar.getInstance().getTime().toString(),
+						mTotalDistance.getText().toString(),
+						mBoundService.getAverageSpeed(mTotalTime),
+						mTotalDistance.getText().toString(),
+						mBoundService.getLocations());
 			}
 			doUnbindService();
 			stopService(new Intent(this, GpsTrackService.class));

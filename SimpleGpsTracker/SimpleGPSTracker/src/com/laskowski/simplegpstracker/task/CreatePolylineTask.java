@@ -1,8 +1,5 @@
 package com.laskowski.simplegpstracker.task;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import android.location.Location;
 import android.os.AsyncTask;
 
@@ -12,6 +9,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.laskowski.simplegpstracker.MainActivity;
 import com.laskowski.simplegpstracker.util.PolyLineLatLngBoundsTuple;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class CreatePolylineTask extends
 		AsyncTask<Void, Void, PolyLineLatLngBoundsTuple> {

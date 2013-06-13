@@ -1,8 +1,5 @@
 package com.laskowski.simplegpstracker.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,6 +19,9 @@ import android.widget.Toast;
 import com.laskowski.simplegpstracker.MainActivity;
 import com.laskowski.simplegpstracker.R;
 import com.laskowski.simplegpstracker.util.SpeedDistanceTuple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * class that performs GPS calculation in background

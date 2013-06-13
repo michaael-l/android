@@ -17,4 +17,10 @@
     <string name="notification_text">Tap here to open Simple Sport Tracker</string>
     <string name="notification_title">Simple Sport Tracker</string>
 
+    <!-- menu items -->
+    <string name="menu_history">Training History</string>
+    
+    <string name="no_entries">No trips stored yet</string>
+    
+
 </resources>
