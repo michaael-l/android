@@ -1,6 +1,5 @@
 package com.laskowski.simplegpstracker.db;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -37,16 +36,16 @@ public class DBUtils {
 	 */
 	private static final String CREATE_TRIP_TABLE = "create table "
 			+ TRIP_TABLE
-			+ "  (id timestamp primary key  not null, description text, time text not null, "
+			+ "  (id long primary key  not null, description text, time text not null, "
 			+ "average_speed text not null, distance text not null);";
 	private static final String CREATE_TRIP_CORDS_TABLE = "create table "
 			+ TRIP_COORDS_TABLE
-			+ " (trip_id timestamp references trip(id), lattitude double not null, longtitude double not null );";
+			+ " (trip_id long references trip(id), lattitude double not null, longtitude double not null );";
 	private static final String FROM_CLAUSE = "trip join trip_coordinates on (trip.id = trip_coordinates.trip_id)";
 
 	private static final String DATABASE_NAME = "gpstrack.db";
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private final Context mCtx;
 
@@ -162,12 +161,12 @@ public class DBUtils {
 	 *            id of trip to delete
 	 * @return true if deleted, false otherwise
 	 */
-	public boolean deleteTripEntry(Timestamp entryId) {
+	public boolean deleteTripEntry(long entryId) {
 
 		Cursor cur = fetchTripEntry(entryId);
 
 		if (cur != null && cur.getCount() == 1) {
-			cur = fetchCoordsForTrip(entryId.getTime());
+			cur = fetchCoordsForTrip(entryId);
 			if (cur != null && cur.getCount() != 0) {
 				mDb.delete(TRIP_COORDS_TABLE, KEY_COORD_ID + "= '" + entryId
 						+ "'", null);
@@ -205,14 +204,14 @@ public class DBUtils {
 	 * @throws SQLException
 	 *             if entry could not be found/retrieved
 	 */
-	public Cursor fetchTripEntry(Timestamp id) throws SQLException {
+	public Cursor fetchTripEntry(long id) throws SQLException {
 
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
 		builder.setTables(FROM_CLAUSE);
-		builder.appendWhereEscapeString("trip.id = " + id);
 
-		Cursor cur = builder.query(mDb, null, null, null, null, null, null);
+		Cursor cur = builder.query(mDb, null, "trip.id = " + id, null, null,
+				null, null);
 		if (cur != null) {
 			cur.moveToFirst();
 		}
