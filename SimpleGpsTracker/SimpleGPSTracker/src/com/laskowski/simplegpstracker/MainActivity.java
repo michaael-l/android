@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,13 +25,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.laskowski.simplegpstracker.db.DBUtils;
 import com.laskowski.simplegpstracker.fragments.EnableGpsDialogFragment;
 import com.laskowski.simplegpstracker.service.GpsTrackService;
 import com.laskowski.simplegpstracker.task.CreatePolylineTask;
 import com.laskowski.simplegpstracker.util.SpeedDistanceTuple;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActivity {
 
 	public static final String TAG = "com.laskowski.simplegpstracker.FragmentActivity";
 
@@ -47,23 +47,16 @@ public class MainActivity extends FragmentActivity {
 	private boolean mIsStart = true;
 	private boolean mIsBound = false;
 
-	private TextView mAvgSpeed;
 	private TextView mCurSpeed;
-	private LinearLayout mFragmentLayout;
 
 	private Handler mHandler;
 
 	// the background service runnning the gps interaction
 	private GpsTrackService mBoundService;
 
-	private GoogleMap mMap;
-	private SupportMapFragment mMapFragment;
-
 	private Button mStartStopButton;
 	private Long mStartTime = 0L;
 	private int mTotalTime = 0;
-
-	private TextView mTimeElapsed;
 
 	private Handler mTimeHandler = new Handler();
 
@@ -122,10 +115,11 @@ public class MainActivity extends FragmentActivity {
 
 		mTimeElapsed = (TextView) findViewById(R.id.time);
 		mTotalDistance = (TextView) findViewById(R.id.totaldist);
-		mCurSpeed = (TextView) findViewById(R.id.curspeed);
 		mAvgSpeed = (TextView) findViewById(R.id.avgspeed);
-
 		mFragmentLayout = (LinearLayout) findViewById(R.id.fragment_layout);
+
+
+		mCurSpeed = (TextView) findViewById(R.id.curspeed);
 
 		mStartStopButton = (Button) findViewById(R.id.start_stop_button);
 
@@ -244,21 +238,16 @@ public class MainActivity extends FragmentActivity {
 				mMap = ((SupportMapFragment) getSupportFragmentManager()
 						.findFragmentById(R.id.map)).getMap();
 				if (mMap != null && locations.size() > 1) {
-					new CreatePolylineTask(this).execute(new Void[] {});
+					new CreatePolylineTask(this).execute(mBoundService
+							.getmLatLngs().toArray(
+									new LatLng[mBoundService.getmLatLngs()
+											.size()]));
 				}
 			} else if (locations.size() > 1) {
-				new CreatePolylineTask(this).execute(new Void[] {});
+				new CreatePolylineTask(this)
+						.execute(mBoundService.getmLatLngs().toArray(
+								new LatLng[mBoundService.getmLatLngs().size()]));
 			}
-		}
-
-	}
-
-	public void showHideMap(boolean visible) {
-
-		if (visible) {
-			mFragmentLayout.setVisibility(View.VISIBLE);
-		} else {
-			mFragmentLayout.setVisibility(View.INVISIBLE);
 		}
 
 	}
@@ -279,7 +268,7 @@ public class MainActivity extends FragmentActivity {
 				DBUtils db = DBUtils.getInstance(this);
 				db.createTripEntry("Trip from "
 						+ Calendar.getInstance().getTime().toString(),
-						mTotalDistance.getText().toString(),
+						mTimeElapsed.getText().toString(),
 						mBoundService.getAverageSpeed(mTotalTime),
 						mTotalDistance.getText().toString(),
 						mBoundService.getLocations());
@@ -359,20 +348,5 @@ public class MainActivity extends FragmentActivity {
 		this.mBoundService = mBoundService;
 	}
 
-	public GoogleMap getmMap() {
-		return mMap;
-	}
-
-	public void setmMap(GoogleMap mMap) {
-		this.mMap = mMap;
-	}
-
-	public LinearLayout getmFragmentLayout() {
-		return mFragmentLayout;
-	}
-
-	public void setmFragmentLayout(LinearLayout mFragmentLayout) {
-		this.mFragmentLayout = mFragmentLayout;
-	}
 
 }

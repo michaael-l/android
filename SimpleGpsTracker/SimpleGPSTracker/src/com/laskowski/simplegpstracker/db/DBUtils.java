@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.location.Location;
 import android.util.Log;
 
@@ -206,12 +205,10 @@ public class DBUtils {
 	 */
 	public Cursor fetchTripEntry(long id) throws SQLException {
 
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+		Cursor cur = mDb.query(TRIP_TABLE, new String[] { KEY_TRIP_ID,
+				KEY_DESC, KEY_TIME, KEY_AVG_SPEED, KEY_DIST }, KEY_TRIP_ID
+				+ "= " + id, null, null, null, null, null);
 
-		builder.setTables(FROM_CLAUSE);
-
-		Cursor cur = builder.query(mDb, null, "trip.id = " + id, null, null,
-				null, null);
 		if (cur != null) {
 			cur.moveToFirst();
 		}

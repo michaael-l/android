@@ -1,51 +1,41 @@
 package com.laskowski.simplegpstracker.task;
 
-import android.location.Location;
+import java.lang.ref.WeakReference;
+
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.laskowski.simplegpstracker.MainActivity;
+import com.laskowski.simplegpstracker.BaseActivity;
 import com.laskowski.simplegpstracker.util.PolyLineLatLngBoundsTuple;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 public class CreatePolylineTask extends
-		AsyncTask<Void, Void, PolyLineLatLngBoundsTuple> {
+		AsyncTask<LatLng, Void, PolyLineLatLngBoundsTuple> {
 
-	private final WeakReference<MainActivity> activity;
+	private final WeakReference<BaseActivity> activity;
 
-	public CreatePolylineTask(MainActivity activity) {
+	public CreatePolylineTask(BaseActivity activity) {
 		super();
-		this.activity = new WeakReference<MainActivity>(activity);
+		this.activity = new WeakReference<BaseActivity>(activity);
 	}
 
 	@Override
-	protected PolyLineLatLngBoundsTuple doInBackground(Void... params) {
-		if (activity != null) {
-			if (activity.get().ismIsBound()) {
+	protected PolyLineLatLngBoundsTuple doInBackground(LatLng... params) {
 
-				PolyLineLatLngBoundsTuple result = new PolyLineLatLngBoundsTuple();
-				PolylineOptions polyline = new PolylineOptions();
-				LatLngBounds.Builder builder = new LatLngBounds.Builder();
-				LatLng ll = null;
-				List<Location> locations = activity.get().getmBoundService()
-						.getLocations();
-				for (Location loc : locations) {
-					ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-					polyline.add(ll);
-					builder = builder.include(ll);
+		PolyLineLatLngBoundsTuple result = new PolyLineLatLngBoundsTuple();
+		PolylineOptions polyline = new PolylineOptions();
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-				}
-				result.setBounds(builder.build());
-				result.setOptions(polyline);
-				return result;
-			}
+		for (LatLng param : params) {
+			builder = builder.include(param);
+			polyline.add(param);
 		}
-		return null;
+
+		result.setBounds(builder.build());
+		result.setOptions(polyline);
+		return result;
 	}
 
 	@Override

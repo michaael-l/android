@@ -1,5 +1,8 @@
 package com.laskowski.simplegpstracker.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,12 +19,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.laskowski.simplegpstracker.MainActivity;
 import com.laskowski.simplegpstracker.R;
 import com.laskowski.simplegpstracker.util.SpeedDistanceTuple;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * class that performs GPS calculation in background
@@ -35,6 +36,7 @@ public class GpsTrackService extends Service {
 
 	// holds all locations updates
 	private List<Location> mLocations;
+	private List<LatLng> mLatLngs;
 	private LocationManager mLocationManager;
 	private Integer mTotalDistanceInMeters = 0;
 
@@ -60,6 +62,7 @@ public class GpsTrackService extends Service {
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		mLocations = new ArrayList<Location>();
+		mLatLngs = new ArrayList<LatLng>();
 
 		requestUpdatesFromProvider(LocationManager.GPS_PROVIDER,
 				R.string.not_support_gps);
@@ -156,6 +159,8 @@ public class GpsTrackService extends Service {
 							mLocations.size() != 0 ? mLocations.get(mLocations
 									.size() - 1) : location });
 			mLocations.add(location);
+			mLatLngs.add(new LatLng(location.getLatitude(), location
+					.getLongitude()));
 		}
 
 		@Override
@@ -225,12 +230,20 @@ public class GpsTrackService extends Service {
 	@SuppressLint("DefaultLocale")
 	public String getAverageSpeed(int totalTime) {
 
-		return String.format("%.3g%n", ((float) mTotalDistanceInMeters / 1000)
+		return String.format("%.5g%n", ((float) mTotalDistanceInMeters / 1000)
 				/ (Float.valueOf(totalTime) / (60 * 60)));
 	}
 
 	public List<Location> getLocations() {
 		return mLocations;
+	}
+
+	public List<LatLng> getmLatLngs() {
+		return mLatLngs;
+	}
+
+	public void setmLatLngs(List<LatLng> mLatLngs) {
+		this.mLatLngs = mLatLngs;
 	}
 
 }
