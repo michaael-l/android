@@ -70,10 +70,10 @@ public class TripDetailsActivity extends BaseActivity {
 			if (cur.getCount() != 0) {
 				coords = new ArrayList<LatLng>(cur.getCount());
 				cur.moveToFirst();
-				coords.add(new LatLng(cur.getLong(1), cur.getLong(1)));
+				coords.add(new LatLng(cur.getLong(1), cur.getLong(2)));
 
 				while (cur.moveToNext()) {
-					coords.add(new LatLng(cur.getLong(1), cur.getLong(1)));
+					coords.add(new LatLng(cur.getLong(1), cur.getLong(2)));
 				}
 			}
 

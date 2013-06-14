@@ -57,7 +57,7 @@
         android:id="@+id/fragment_layout"
         style="?buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
+        android:layout_height="match_parent"
         android:layout_weight="40" 
         android:visibility="invisible">
 

@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.laskowski.simplegpstracker.db.DBUtils;
@@ -34,7 +33,7 @@ import com.laskowski.simplegpstracker.util.SpeedDistanceTuple;
 
 public class MainActivity extends BaseActivity {
 
-	public static final String TAG = "com.laskowski.simplegpstracker.FragmentActivity";
+	public static final String TAG = "com.laskowski.simplegpstracker.MainActivity";
 
 	private static final long UI_UPDATE_INTERVAL = 100;
 
@@ -117,7 +116,6 @@ public class MainActivity extends BaseActivity {
 		mTotalDistance = (TextView) findViewById(R.id.totaldist);
 		mAvgSpeed = (TextView) findViewById(R.id.avgspeed);
 		mFragmentLayout = (LinearLayout) findViewById(R.id.fragment_layout);
-
 
 		mCurSpeed = (TextView) findViewById(R.id.curspeed);
 
@@ -347,6 +345,5 @@ public class MainActivity extends BaseActivity {
 	public void setmBoundService(GpsTrackService mBoundService) {
 		this.mBoundService = mBoundService;
 	}
-
 
 }
