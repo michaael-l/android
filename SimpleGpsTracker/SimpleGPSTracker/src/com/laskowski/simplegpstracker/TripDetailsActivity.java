@@ -30,7 +30,7 @@ public class TripDetailsActivity extends BaseActivity {
 
 		mMapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map);
-		mMapFragment.setRetainInstance(true);
+		//mMapFragment = SupportMapFragment.newInstance(new GoogleMapOptions());
 
 		mMap = ((SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map)).getMap();
@@ -70,10 +70,10 @@ public class TripDetailsActivity extends BaseActivity {
 			if (cur.getCount() != 0) {
 				coords = new ArrayList<LatLng>(cur.getCount());
 				cur.moveToFirst();
-				coords.add(new LatLng(cur.getLong(1), cur.getLong(2)));
+				coords.add(new LatLng(cur.getDouble(1), cur.getDouble(2)));
 
 				while (cur.moveToNext()) {
-					coords.add(new LatLng(cur.getLong(1), cur.getLong(2)));
+					coords.add(new LatLng(cur.getDouble(1), cur.getDouble(2)));
 				}
 			}
 
