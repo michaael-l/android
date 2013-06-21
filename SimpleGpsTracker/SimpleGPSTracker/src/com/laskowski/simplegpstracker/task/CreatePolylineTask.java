@@ -2,7 +2,11 @@ package com.laskowski.simplegpstracker.task;
 
 import java.lang.ref.WeakReference;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.os.AsyncTask;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,10 +19,19 @@ public class CreatePolylineTask extends
 		AsyncTask<LatLng, Void, PolyLineLatLngBoundsTuple> {
 
 	private final WeakReference<BaseActivity> activity;
+	private final int screenHeight;
+	private final int screenWidth;
 
 	public CreatePolylineTask(BaseActivity activity) {
 		super();
 		this.activity = new WeakReference<BaseActivity>(activity);
+		WindowManager wm = (WindowManager) activity
+				.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		this.screenHeight = size.x;
+		this.screenWidth = size.y;
 	}
 
 	@Override
@@ -48,11 +61,8 @@ public class CreatePolylineTask extends
 						.getmMap()
 						.moveCamera(
 								CameraUpdateFactory.newLatLngBounds(
-										result.getBounds(), activity.get()
-												.getmFragmentLayout()
-												.getWidth(), activity.get()
-												.getmFragmentLayout()
-												.getHeight(), 20));
+										result.getBounds(), screenWidth,
+										(int) (screenHeight * 0.4), 20));
 			}
 		}
 	}

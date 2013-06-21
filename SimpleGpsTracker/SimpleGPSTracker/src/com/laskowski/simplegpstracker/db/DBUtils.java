@@ -188,7 +188,8 @@ public class DBUtils {
 	public Cursor fetchCoordsForTrip(long tripId) {
 
 		Cursor cur = mDb.query(TRIP_COORDS_TABLE, new String[] { KEY_COORD_ID,
-				KEY_LAT, KEY_LNG }, null, null, null, null, null, null);
+				KEY_LAT, KEY_LNG }, KEY_COORD_ID + "=" + tripId, null, null,
+				null, null, null);
 
 		return cur;
 	}
