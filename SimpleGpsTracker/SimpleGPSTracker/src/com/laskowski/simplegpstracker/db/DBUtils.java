@@ -40,7 +40,6 @@ public class DBUtils {
 	private static final String CREATE_TRIP_CORDS_TABLE = "create table "
 			+ TRIP_COORDS_TABLE
 			+ " (trip_id long references trip(id), lattitude double not null, longtitude double not null );";
-	private static final String FROM_CLAUSE = "trip join trip_coordinates on (trip.id = trip_coordinates.trip_id)";
 
 	private static final String DATABASE_NAME = "gpstrack.db";
 
