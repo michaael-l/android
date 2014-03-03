@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Password Manager</string>
+    <string name="menu_insert">Add password entry</string>
+    <string name="menu_delete">Delete password entry</string>
+    <string name="menu_set_passws">Set/Reset main password</string>
+    <string name="user">User</string>
+    <string name="entryName">Entry Name</string>
+    <string name="login_activity_loginfail_text_pwonly">You entered the wrong password.
+        Please re-enter your password.</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit_passwd">Edit password entry</string>
+    <string name="no_entries">No entries</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="retype_password_label">Retype Password</string>
+    <string name="ok_button">Sign In</string>
+    <string name="label">Password Manager</string>
+    <string name="wrong_pwd">Wrong password, please re-type</string>
+    <string name="empty_pwd">Type in password</string>
+    <string name="pwd_not_same">Passwords doesn\'t match, please retype</string>
+    <string name="empty_retype_pwd">Retype password</string>
+    <string name="empty_login">Type in login</string>
+    <string name="wrong_user_or_passwd">Wrong user name or password, please try again</string>
+
+</resources>
