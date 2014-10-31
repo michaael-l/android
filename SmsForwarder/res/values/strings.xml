@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sms Forwarder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="notification_title">Sms Forwarder</string>
+    <string  name="notification_text">Sms Forwarder</string>
+
+</resources>
