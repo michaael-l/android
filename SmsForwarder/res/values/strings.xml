@@ -2,9 +2,24 @@
 <resources>
 
     <string name="app_name">Sms Forwarder</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Sms Forwarder - please use settings menu to configure the application</string>
     <string name="action_settings">Settings</string>
     <string name="notification_title">Sms Forwarder</string>
-    <string  name="notification_text">Sms Forwarder</string>
+    <string name="notification_text">Sms Forwarder</string>
+    <string name="preferences_forwarding_enable_title">Enable forwarding?</string>
+    <string name="preferences_forwarding_enable_summary">Check if you want messages to be forwarded</string>
+    <string name="preferences_forward_number_tile">Forward Number</string>
+    <string name="preferences_forward_number_default_value">Please set the forward number</string>
+
+    <string-array name="entries_list_preference">
+        <item>"Top"</item>
+        <item>"Center"</item>
+        <item>"Bottom"</item>
+    </string-array>
+    <string-array name="entryvalues_list_preference">
+        <item>"Top"</item>
+        <item>"Center"</item>
+        <item>"Bottom"</item>
+    </string-array>
 
 </resources>

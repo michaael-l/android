@@ -1,9 +1,11 @@
 package pl.laskowski.android.smsforwarder;
 
+import pl.laskowski.android.smsforwarder.fragments.PreferencesFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
@@ -15,19 +17,24 @@ public class SMSReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Bundle extras = intent.getExtras();
 
-		Object[] pdus = (Object[]) extras.get("pdus");
-		for (Object pdu : pdus) {
-			SmsMessage msg = SmsMessage.createFromPdu((byte[]) pdu);
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+				PreferencesFragment.ENABLE_FORWARD_PREF_KEY, false)) {
+			Bundle extras = intent.getExtras();
 
-			String origin = msg.getOriginatingAddress();
-			String body = msg.getMessageBody();
+			Object[] pdus = (Object[]) extras.get("pdus");
+			for (Object pdu : pdus) {
+				SmsMessage msg = SmsMessage.createFromPdu((byte[]) pdu);
 
-			// Forward the received SMS if and only if there is a rule for sender
-			// TODO implement settings
-			manager.sendTextMessage("+48793236373", null, FORWARD_TEXT + origin + ":" + body, null, null);
+				String origin = msg.getOriginatingAddress();
+				String body = msg.getMessageBody();
 
+				manager.sendTextMessage(
+						PreferenceManager.getDefaultSharedPreferences(context).getString(
+								PreferencesFragment.FORWARD_NUMBER_PREF_KEY, ""), null, FORWARD_TEXT + origin + ":"
+								+ body, null, null);
+
+			}
 		}
 	}
 }
