@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Secure Notes</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="no_entries">No entries</string>
+    <string name="menu_insert">Add password entry</string>
+    <string name="menu_delete">Delete password entry</string>
+    <string name="menu_export_import">Export/Import notes</string>
+    <string name="user">User</string>
+    <string name="entryName">Entry Name</string>
+    <string name="password_label">Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="edit_passwd">Edit password entry</string>
+    <string name="import_lbl">Import entries</string>
+    <string name="export_lbl">Export entries</string>
+
+</resources>
